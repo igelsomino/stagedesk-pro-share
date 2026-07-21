@@ -39,7 +39,7 @@ La Function richiede i secret Cloudflare Pages `SUPABASE_URL` e
 Il recupero password usa come redirect la stessa pagina della condivisione:
 `https://stagedesk-pro.aigconsulting.it/share/*`. Inserisci questo pattern, oppure gli URL `/share/[UID]` necessari, nelle URL di reindirizzamento consentite in Supabase. Il callback dei provider resta `https://insoqzhjmrbrgfrsmlnj.supabase.co/auth/v1/callback`.
 
-La tabella `profiles` non contiene provider o password. Contiene i dati applicativi richiesti per il profilo dell'attore; identità, provider e credenziali restano gestiti da Supabase Auth e non devono essere duplicati nel database applicativo.
+Un account creato tramite provider esterno può completare il recupero password via e-mail e continuare a utilizzare lo stesso account per accedere alla condivisione.
 
 ## Relazione con StageDesk Pro
 
