@@ -13,6 +13,9 @@ Pagina web responsive per la consultazione di un copione condiviso da StageDesk 
 - bookmark persistenti, navigazione tra bookmark e ritorno all'inizio del copione;
 - caricamento progressivo dei contenuti per copioni lunghi;
 - layout responsive per desktop e dispositivi mobili.
+- recupero password via e-mail con impostazione guidata della nuova password;
+- registrazione e-mail con nome, cognome, telefono, profili multipli, privacy, termini d'uso e consenso informativo;
+- profili operativi **Attore/Attrice** e **Autore/Autrice** oltre a Regista e Altro;
 
 ## Struttura
 
@@ -30,6 +33,9 @@ npx wrangler pages deploy . --project-name stagedesk-pro-share
 
 La Function richiede i secret Cloudflare Pages `SUPABASE_URL` e
 `SUPABASE_PUBLISHABLE_KEY`. Le credenziali non sono incluse nel repository.
+
+Il recupero password usa come redirect la stessa pagina della condivisione:
+`https://stagedesk-pro.aigconsulting.it/share/*`. Inserisci questo pattern, oppure gli URL `/share/[UID]` necessari, nelle URL di reindirizzamento consentite in Supabase. Il callback dei provider resta `https://insoqzhjmrbrgfrsmlnj.supabase.co/auth/v1/callback`.
 
 ## Relazione con StageDesk Pro
 
