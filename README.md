@@ -16,6 +16,8 @@ Pagina web responsive per la consultazione di un copione condiviso da StageDesk 
 - recupero password via e-mail con impostazione guidata della nuova password;
 - registrazione e-mail con nome, cognome, telefono, profili multipli, privacy, termini d'uso e consenso informativo;
 - profili operativi **Attore/Attrice** e **Autore/Autrice** oltre a Regista e Altro;
+- completamento obbligatorio del profilo dopo l'autenticazione OAuth, prima dell'inserimento del PIN;
+- recupero password gestito da Supabase Auth: un account nato con Google, GitHub o Azure può aggiungere una credenziale email/password senza creare un secondo account.
 
 ## Struttura
 
@@ -36,6 +38,8 @@ La Function richiede i secret Cloudflare Pages `SUPABASE_URL` e
 
 Il recupero password usa come redirect la stessa pagina della condivisione:
 `https://stagedesk-pro.aigconsulting.it/share/*`. Inserisci questo pattern, oppure gli URL `/share/[UID]` necessari, nelle URL di reindirizzamento consentite in Supabase. Il callback dei provider resta `https://insoqzhjmrbrgfrsmlnj.supabase.co/auth/v1/callback`.
+
+La tabella `profiles` non contiene provider o password. Contiene i dati applicativi richiesti per il profilo dell'attore; identità, provider e credenziali restano gestiti da Supabase Auth e non devono essere duplicati nel database applicativo.
 
 ## Relazione con StageDesk Pro
 
