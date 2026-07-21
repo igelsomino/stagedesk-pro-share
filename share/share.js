@@ -922,19 +922,24 @@ const renderShare = (updateMessage = '', uiState = {}) => {
       scrollToBookmark(ids[nextIndex])
     })
   })
-  root.querySelectorAll('.actor-dialogue').forEach((card) => {
-    card.querySelector('[data-dialogue-bookmark]')?.addEventListener('click', (event) => {
-      event.preventDefault()
-      event.stopPropagation()
-      const dialogueId = card.dataset.dialogueId
-      setBookmark(dialogueId, !bookmarkedDialogueIds.has(dialogueId))
-    })
-    card.addEventListener('dblclick', (event) => {
-      if (window.innerWidth > 560 || event.target.closest('button, input, select, a')) return
-      const dialogueId = card.dataset.dialogueId
-      setBookmark(dialogueId, !bookmarkedDialogueIds.has(dialogueId))
-    }, { passive: false })
+  root.querySelector('.dialogue-list')?.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-dialogue-bookmark]')
+    if (!button) return
+    const card = button.closest('.actor-dialogue')
+    if (!card) return
+    event.preventDefault()
+    event.stopPropagation()
+    const dialogueId = card.dataset.dialogueId
+    setBookmark(dialogueId, !bookmarkedDialogueIds.has(dialogueId))
   })
+  root.querySelector('.dialogue-list')?.addEventListener('dblclick', (event) => {
+    if (window.innerWidth > 560 || event.target.closest('button, input, select, a')) return
+    const card = event.target.closest('.actor-dialogue')
+    if (!card) return
+    event.preventDefault()
+    const dialogueId = card.dataset.dialogueId
+    setBookmark(dialogueId, !bookmarkedDialogueIds.has(dialogueId))
+  }, { passive: false })
   root.querySelectorAll('.character-option input').forEach((input) => {
     input.addEventListener('change', () => {
       const scrollY = window.scrollY
