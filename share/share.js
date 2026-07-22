@@ -214,6 +214,7 @@ const renderBrand = (title, subtitle = '', action = '') => `
 `
 
 const characterKey = (value) => String(value ?? '').normalize('NFKC').trim().replace(/\s+/g, ' ').toLocaleLowerCase('it-IT')
+const isCollectiveCharacter = (value) => new Set(['tutti', 'tutte', 'coro', 'ensemble', 'tutti insieme']).has(characterKey(value))
 
 const normalizeCharacterData = (rawCharacters, rawDialogues) => {
   const characters = []
@@ -224,7 +225,7 @@ const normalizeCharacterData = (rawCharacters, rawDialogues) => {
     if (!rawCharacter || typeof rawCharacter !== 'object') return
     const name = String(rawCharacter.name ?? '').trim()
     const id = String(rawCharacter.id ?? `character-${index}`).trim()
-    if (!name || !id) return
+    if (!name || !id || isCollectiveCharacter(name)) return
 
     const key = characterKey(name)
     const existing = byName.get(key)
@@ -242,7 +243,8 @@ const normalizeCharacterData = (rawCharacters, rawDialogues) => {
   const dialogues = rawDialogues.map((dialogue) => {
     const characterId = aliases.get(String(dialogue.characterId ?? ''))
       || byName.get(characterKey(dialogue.characterName ?? dialogue.character))?.id
-    return characterId ? { ...dialogue, characterId } : dialogue
+    const collective = Boolean(dialogue.collective) || isCollectiveCharacter(dialogue.characterName ?? dialogue.character)
+    return { ...dialogue, characterId: collective ? String(dialogue.characterId ?? 'tutti') : characterId, collective }
   })
 
   return { characters, dialogues }
@@ -716,7 +718,7 @@ const renderShare = (updateMessage = '', uiState = {}) => {
   const allCharactersSelected = characters.length > 0 && selectedCharacters.size === characters.length
   const selectionActionLabel = allCharactersSelected ? 'Inverti selezione' : 'Seleziona tutto'
   const progressStats = dialogues.reduce((stats, dialogue) => {
-    if (!selectedCharacters.has(dialogue.characterId)) return stats
+    if (dialogue.collective || !selectedCharacters.has(dialogue.characterId)) return stats
     const status = progress[dialogue.id] || 'da_studiare'
     stats[status] = (stats[status] || 0) + 1
     return stats
@@ -730,11 +732,12 @@ const renderShare = (updateMessage = '', uiState = {}) => {
       const ownerMatchesSearch = !dialogueSearchQuery || !owner || `${owner.characterName} ${owner.text}`.toLowerCase().includes(dialogueSearchQuery)
       return renderNote(item, !noteVisible, dialogueId, !ownerMatchesSearch)
     }
-    const selected = selectedCharacters.has(item.characterId)
-    const concealed = filterMode === 'hide-selected' && selected && !revealedDialogueIds.has(item.id)
-    const visible = filterMode === 'hide-selected' || selected
-    const canToggleVisibility = filterMode === 'hide-selected' && selected
-    const hasStudyControls = selected
+    const collective = Boolean(item.collective) || isCollectiveCharacter(item.characterName)
+    const selected = collective || selectedCharacters.has(item.characterId)
+    const concealed = !collective && filterMode === 'hide-selected' && selected && !revealedDialogueIds.has(item.id)
+    const visible = collective || filterMode === 'hide-selected' || selected
+    const canToggleVisibility = !collective && filterMode === 'hide-selected' && selected
+    const hasStudyControls = selected && !collective
     const status = progress[item.id] || 'da_studiare'
     const matchesSearch = !dialogueSearchQuery || `${item.characterName} ${item.text}`.toLowerCase().includes(dialogueSearchQuery)
     const isBookmarked = bookmarkedDialogueIds.has(item.id)
