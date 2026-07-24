@@ -2,7 +2,7 @@
 
 Pagina web responsive per la consultazione di un copione condiviso da StageDesk Pro.
 
-Interfaccia allineata alla release desktop StageDesk Pro **1.0.39**. Il frontend è statico e viene distribuito
+Interfaccia allineata alla release desktop StageDesk Pro **1.0.40**. Il frontend è statico e viene distribuito
 tramite Cloudflare Pages; la configurazione e i contenuti condivisi restano gestiti dai servizi Supabase previsti.
 
 ## Funzionalità
