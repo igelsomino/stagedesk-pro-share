@@ -2,7 +2,7 @@
 
 Pagina web responsive per la consultazione di un copione condiviso da StageDesk Pro.
 
-Interfaccia allineata alla release desktop StageDesk Pro **1.0.40**. Il frontend è statico e viene distribuito
+Interfaccia allineata alla release desktop StageDesk Pro **1.0.43**. Il frontend è statico e viene distribuito
 tramite Cloudflare Pages; la configurazione e i contenuti condivisi restano gestiti dai servizi Supabase previsti.
 
 ## Funzionalità
@@ -21,6 +21,8 @@ tramite Cloudflare Pages; la configurazione e i contenuti condivisi restano gest
 - profili operativi **Attore/Attrice** e **Autore/Autrice** oltre a Regista e Altro;
 - completamento obbligatorio del profilo dopo l'autenticazione OAuth, prima dell'inserimento del PIN;
 - recupero password gestito da Supabase Auth: un account nato con Google, GitHub o Azure può aggiungere una credenziale email/password senza creare un secondo account.
+- quando la pagina è incorporata in StageDesk Pro, l'autenticazione OAuth viene aperta nel browser esterno e il risultato viene restituito all'app tramite un messaggio verificato;
+- il link di condivisione continua a funzionare direttamente nel browser, con il normale redirect HTTPS.
 
 ## Struttura
 
